@@ -32,8 +32,8 @@ export async function register(userData: { email: string; password: string; name
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(userData),
       credentials: 'include',
+      body: JSON.stringify(userData),
     })
 
     if (!response.ok) {

@@ -4,15 +4,21 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Home, LogOut,  UserIcon, Building, Calendar } from "lucide-react"
-import { logout, getCurrentUser } from "@/lib/auth"
-import type { AuthUser } from "@/lib/auth"
+import { logout, getCurrentUser } from "@/lib/api"
+import type { User } from "@/lib/api"
 
 export function Header() {
-  const [user, setUser] = useState<AuthUser | null>(null)
   const router = useRouter()
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -23,6 +29,8 @@ export function Header() {
         console.log("Error getting current user:", error)
         // User not logged in
         setUser(null)
+      } finally {
+        setLoading(false)
       }
     }
 

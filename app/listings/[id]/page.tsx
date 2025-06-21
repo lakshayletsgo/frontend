@@ -14,7 +14,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { MapPin, Users, Bed, Bath, CalendarIcon, Link } from "lucide-react"
 import { format, differenceInDays, isBefore } from "date-fns"
 import { getListing, createBooking } from "@/lib/api"
-import { getCurrentUser } from "@/lib/auth"
+import { getCurrentUser } from "@/lib/api"
 import type { Listing } from "@/lib/api"
 
 export default function ListingDetailPage() {

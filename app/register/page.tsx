@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { register } from "@/lib/auth"
+import { register } from "@/lib/api"
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({

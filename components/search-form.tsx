@@ -36,12 +36,6 @@ export function SearchForm({ onSearch }: SearchFormProps) {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
 
-    const params = new URLSearchParams()
-    if (location) params.set("location", location)
-    if (checkIn) params.set("checkIn", checkIn.toISOString().split('T')[0])
-    if (checkOut) params.set("checkOut", checkOut.toISOString().split('T')[0])
-    if (guests) params.set("guests", guests)
-
     onSearch({
       location: location || undefined,
       checkIn: checkIn ? checkIn.toISOString().split('T')[0] : undefined,

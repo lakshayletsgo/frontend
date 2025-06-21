@@ -46,7 +46,7 @@ export default function HostDashboardPage() {
     }
 
     fetchListings()
-  }, [toast])
+  }, [])
 
   const handleDelete = async () => {
     if (!listingToDelete) return

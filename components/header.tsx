@@ -18,7 +18,6 @@ import type { User } from "@/lib/api"
 export function Header() {
   const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -30,7 +29,6 @@ export function Header() {
         // User not logged in
         setUser(null)
       } finally {
-        setLoading(false)
       }
     }
 

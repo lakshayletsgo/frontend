@@ -1,17 +1,33 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useSearchParams } from "next/navigation"
+import { useSearchParams, useRouter } from "next/navigation"
 import { Header } from "@/components/header"
 import { SearchForm } from "@/components/search-form"
 import { PropertyCard } from "@/components/property-card"
 import { getListings } from "@/lib/api"
 import type { Listing } from "@/lib/api"
+import { Suspense } from "react"
 
-export default function HomePage() {
+function HomeContent() {
   const [listings, setListings] = useState<Listing[]>([])
   const [loading, setLoading] = useState(true)
   const searchParams = useSearchParams()
+  const router = useRouter()
+
+  const handleSearch = (params: {
+    location?: string
+    checkIn?: string
+    checkOut?: string
+    guests?: number
+  }) => {
+    const searchParams = new URLSearchParams()
+    if (params.location) searchParams.set("location", params.location)
+    if (params.checkIn) searchParams.set("checkIn", params.checkIn)
+    if (params.checkOut) searchParams.set("checkOut", params.checkOut)
+    if (params.guests) searchParams.set("guests", params.guests.toString())
+    router.push(`/?${searchParams.toString()}`)
+  }
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -43,7 +59,7 @@ export default function HomePage() {
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-center mb-2">Find Your Perfect Stay</h1>
           <p className="text-gray-600 text-center mb-8">Discover unique places to stay around the world</p>
-          <SearchForm />
+          <SearchForm onSearch={handleSearch} />
         </div>
 
         {loading ? (
@@ -91,5 +107,13 @@ export default function HomePage() {
         )}
       </main>
     </div>
+  )
+}
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   )
 }

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Home, LogOut, Plus, UserIcon, Building, Calendar } from "lucide-react"
+import { Home, LogOut,  UserIcon, Building, Calendar } from "lucide-react"
 import { logout, getCurrentUser } from "@/lib/auth"
 import type { AuthUser } from "@/lib/auth"
 
@@ -20,6 +20,7 @@ export function Header() {
         const userData = await getCurrentUser()
         setUser(userData)
       } catch (error) {
+        console.log("Error getting current user:", error)
         // User not logged in
         setUser(null)
       }

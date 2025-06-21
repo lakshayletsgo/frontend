@@ -101,7 +101,7 @@ export async function createBooking(data: {
       try {
         const errorData = await response.json()
         throw new Error(errorData.message || errorData.error || 'Failed to create booking')
-      } catch (e) {
+      } catch {
         // If parsing JSON fails, throw generic error with status
         throw new Error(`Failed to create booking (Status: ${response.status})`)
       }

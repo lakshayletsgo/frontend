@@ -1,30 +1,16 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import {  useState } from "react"
 import { Header } from "@/components/header"
 import { PropertyCard } from "@/components/property-card"
 import { SearchForm } from "@/components/search-form"
 import { getListings } from "@/lib/api"
 import type { Listing } from "@/lib/api"
+import { Suspense } from "react"
 
-export default function ListingsPage() {
+function ListingsContent() {
   const [listings, setListings] = useState<Listing[]>([])
   const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchListings = async () => {
-      try {
-        const data = await getListings()
-        setListings(data)
-      } catch (error) {
-        console.error("Failed to fetch listings:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchListings()
-  }, [])
 
   const handleSearch = async (searchParams: {
     location?: string
@@ -78,5 +64,13 @@ export default function ListingsPage() {
         )}
       </main>
     </div>
+  )
+}
+
+export default function ListingsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center">Loading...</div>}>
+      <ListingsContent />
+    </Suspense>
   )
 } 

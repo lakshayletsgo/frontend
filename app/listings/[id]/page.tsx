@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { MapPin, Users, Bed, Bath, CalendarIcon } from "lucide-react"
+import { MapPin, Users, Bed, Bath, CalendarIcon, Link } from "lucide-react"
 import { format, differenceInDays, isBefore } from "date-fns"
 import { getListing, createBooking } from "@/lib/api"
 import { getCurrentUser } from "@/lib/auth"
@@ -81,6 +81,7 @@ export default function ListingDetailPage() {
         return
       }
     } catch (error) {
+      console.log("Error getting current user:", error)
       router.push("/login")
       return
     }
@@ -185,7 +186,7 @@ export default function ListingDetailPage() {
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Listing not found</h1>
             <Button asChild>
-              <a href="/">Back to Home</a>
+              <Link href="/">Back to Home</Link>
             </Button>
           </div>
         </div>

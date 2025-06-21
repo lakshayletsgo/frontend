@@ -95,7 +95,7 @@ export default function BookingsPage() {
               <CardTitle>No Bookings Yet</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600 mb-4">You haven't made any bookings yet.</p>
+              <p className="text-gray-600 mb-4">You haven&apos;t made any bookings yet.</p>
               <Button asChild>
                 <Link href="/listings">Browse Stays</Link>
               </Button>

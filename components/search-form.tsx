@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import {  useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -12,8 +12,16 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Search, MapPin, Calendar as CalendarIcon, Users } from "lucide-react"
 import { format } from "date-fns"
 
-export function SearchForm() {
-  const router = useRouter()
+interface SearchFormProps {
+  onSearch: (params: {
+    location?: string
+    checkIn?: string
+    checkOut?: string
+    guests?: number
+  }) => void
+}
+
+export function SearchForm({ onSearch }: SearchFormProps) {
   const searchParams = useSearchParams()
 
   const [location, setLocation] = useState(searchParams.get("location") || "")
@@ -34,7 +42,12 @@ export function SearchForm() {
     if (checkOut) params.set("checkOut", checkOut.toISOString().split('T')[0])
     if (guests) params.set("guests", guests)
 
-    router.push(`/?${params.toString()}`)
+    onSearch({
+      location: location || undefined,
+      checkIn: checkIn ? checkIn.toISOString().split('T')[0] : undefined,
+      checkOut: checkOut ? checkOut.toISOString().split('T')[0] : undefined,
+      guests: guests ? parseInt(guests) : undefined
+    })
   }
 
   return (

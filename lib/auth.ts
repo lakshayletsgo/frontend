@@ -6,12 +6,33 @@ const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 
 export type AuthUser = User
 
+// Helper function to get stored token
+const getStoredToken = () => {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('jwt_token');
+  }
+  return null;
+}
+
+// Helper function to set token
+const setStoredToken = (token: string) => {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('jwt_token', token);
+  }
+}
+
+// Helper function to remove token
+const removeStoredToken = () => {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('jwt_token');
+  }
+}
+
 export async function login(email: string, password: string) {
   const response = await fetch(`${API_BASE_URL}/auth/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Origin': window.location.origin,
     },
     body: JSON.stringify({ email, password }),
     credentials: 'include',
@@ -23,6 +44,11 @@ export async function login(email: string, password: string) {
     throw new Error(data.error || 'Invalid email or password')
   }
 
+  // Store the JWT token if it's in the response
+  if (data.token) {
+    setStoredToken(data.token);
+  }
+
   return data.user
 }
 
@@ -32,7 +58,6 @@ export async function register(userData: { email: string; password: string; name
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Origin': window.location.origin,
       },
       credentials: 'include',
       body: JSON.stringify(userData),
@@ -44,6 +69,10 @@ export async function register(userData: { email: string; password: string; name
     }
 
     const data = await response.json()
+    // Store the JWT token if it's in the response
+    if (data.token) {
+      setStoredToken(data.token);
+    }
     return data.user
   } catch (error) {
     console.error('Registration error:', error)
@@ -53,9 +82,13 @@ export async function register(userData: { email: string; password: string; name
 
 export async function logout() {
   try {
+    const token = getStoredToken();
     const response = await fetch(`${API_BASE_URL}/auth/logout`, {
       method: 'POST',
       credentials: 'include',
+      headers: token ? {
+        'Authorization': `Bearer ${token}`
+      } : {},
     })
 
     if (!response.ok) {
@@ -63,7 +96,8 @@ export async function logout() {
       throw new Error(data.error || 'Logout failed')
     }
 
-    // Clear any client-side state or cookies if needed
+    // Clear the stored token
+    removeStoredToken();
     return true
   } catch (error) {
     console.error('Logout error:', error)
@@ -92,8 +126,12 @@ export async function getAuthUser(request: NextRequest): Promise<AuthUser | null
 
 export async function getCurrentUser(): Promise<AuthUser | null> {
   try {
+    const token = getStoredToken();
     const response = await fetch(`${API_BASE_URL}/auth/me`, {
       credentials: 'include',
+      headers: token ? {
+        'Authorization': `Bearer ${token}`
+      } : {},
     })
 
     if (!response.ok) {
@@ -104,4 +142,12 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
   } catch {
     return null
   }
+}
+
+// Helper function to get auth headers for API calls
+export function getAuthHeaders(): HeadersInit {
+  const token = getStoredToken();
+  return token ? {
+    'Authorization': `Bearer ${token}`
+  } : {};
 }

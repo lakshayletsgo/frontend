@@ -1,3 +1,5 @@
+import { getAuthHeaders } from './auth'
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 
 // Listings API
@@ -16,7 +18,10 @@ export async function getListings(params?: {
 
   const response = await fetch(
     `${API_BASE_URL}/listings?${searchParams.toString()}`,
-    { credentials: 'include' }
+    { 
+      credentials: 'include',
+      headers: getAuthHeaders()
+    }
   )
 
   if (!response.ok) {
@@ -29,6 +34,7 @@ export async function getListings(params?: {
 export async function getListing(id: string) {
   const response = await fetch(`${API_BASE_URL}/listings/${id}`, {
     credentials: 'include',
+    headers: getAuthHeaders()
   })
 
   if (!response.ok) {
@@ -54,6 +60,7 @@ export async function createListing(data: CreateListingData): Promise<Listing> {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      ...getAuthHeaders()
     },
     credentials: "include",
     body: JSON.stringify(data),

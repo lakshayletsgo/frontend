@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server"
 import type { User } from "./api"
 
 // Define the base URL for your backend API
-const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/+$/, '')
+const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000')
 
 export type AuthUser = User
 

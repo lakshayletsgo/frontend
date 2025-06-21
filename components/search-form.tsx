@@ -36,10 +36,17 @@ export function SearchForm({ onSearch }: SearchFormProps) {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
 
+    const formatDate = (date: Date | undefined) => {
+      if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
+        return undefined;
+      }
+      return date.toISOString().split('T')[0];
+    }
+
     onSearch({
       location: location || undefined,
-      checkIn: checkIn ? checkIn.toISOString().split('T')[0] : undefined,
-      checkOut: checkOut ? checkOut.toISOString().split('T')[0] : undefined,
+      checkIn: formatDate(checkIn),
+      checkOut: formatDate(checkOut),
       guests: guests ? parseInt(guests) : undefined
     })
   }

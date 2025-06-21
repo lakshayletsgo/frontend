@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server"
 import type { User } from "./api"
 
 // Define the base URL for your backend API
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/+$/, '')
 
 export type AuthUser = User
 
@@ -11,6 +11,7 @@ export async function login(email: string, password: string) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Origin': window.location.origin,
     },
     body: JSON.stringify({ email, password }),
     credentials: 'include',
@@ -31,6 +32,7 @@ export async function register(userData: { email: string; password: string; name
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Origin': window.location.origin,
       },
       credentials: 'include',
       body: JSON.stringify(userData),

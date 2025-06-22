@@ -3,14 +3,17 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { getUserBookings } from "@/lib/api"
+import { getCurrentUser } from "@/lib/auth"
 import type { Booking } from "@/lib/api"
 
 export default function BookingsPage() {
+  const router = useRouter()
   const [bookings, setBookings] = useState<Booking[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -19,6 +22,13 @@ export default function BookingsPage() {
     const fetchBookings = async () => {
       try {
         setError(null)
+        // First check if user is authenticated
+        const user = await getCurrentUser()
+        if (!user) {
+          router.push('/login')
+          return
+        }
+
         const response = await getUserBookings()
         console.log('Raw API Response:', response) // Debug log
 
@@ -37,7 +47,7 @@ export default function BookingsPage() {
     }
 
     fetchBookings()
-  }, [])
+  }, [router])
 
   const formatDate = (dateString: string) => {
     try {

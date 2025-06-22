@@ -2,26 +2,24 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Home, LogOut,  UserIcon, Building, Calendar } from "lucide-react"
 import { logout, getCurrentUser } from "@/lib/auth"
 import type { AuthUser } from "@/lib/auth"
-import { User } from "@/lib/api"
 
 export function Header() {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<AuthUser | null>(null)
   const router = useRouter()
+  const pathname = usePathname()
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
         const userData = await getCurrentUser()
-        await setUser(userData)
-        console.log("User data:", userData)
-        console.log("User data:", user?.name)
+        setUser(userData)
       } catch (error) {
         console.log("Error getting current user:", error)
         // User not logged in
@@ -30,7 +28,7 @@ export function Header() {
     }
 
     checkAuth()
-  }, [])
+  }, [pathname])
 
   const handleLogout = async () => {
     try {

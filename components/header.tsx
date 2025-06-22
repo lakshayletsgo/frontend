@@ -20,6 +20,7 @@ export function Header() {
         const userData = await getCurrentUser()
         setUser(userData)
         console.log("User data:", userData)
+        console.log("User data:", user?.name)
       } catch (error) {
         console.log("Error getting current user:", error)
         // User not logged in

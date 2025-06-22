@@ -18,7 +18,7 @@ export function Header() {
     const checkAuth = async () => {
       try {
         const userData = await getCurrentUser()
-        setUser(userData)
+        await setUser(userData)
         console.log("User data:", userData)
         console.log("User data:", user?.name)
       } catch (error) {

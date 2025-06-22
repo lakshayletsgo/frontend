@@ -132,7 +132,8 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
       return null
     }
 
-    return response.json()
+    const data = await response.json();
+    return data.user;
   } catch {
     return null
   }

@@ -18,9 +18,12 @@ export function Header() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const userData = await getCurrentUser()
-        setUser(userData)
-        console.log(userData)
+        const responseData = await getCurrentUser()
+        if (responseData) {
+          setUser(responseData)
+        } else {
+          setUser(null)
+        }
       } catch (error) {
         console.log("Error getting current user:", error)
         // User not logged in

@@ -99,7 +99,7 @@ export async function logout() {
 
 export async function getAuthUser(request: NextRequest): Promise<AuthUser | null> {
   try {
-    const response = await fetch(`${API_BASE_URL}/me`, {
+    const response = await fetch(`${API_BASE_URL}/auth/me`, {
       headers: {
         Cookie: request.headers.get('cookie') || '',
       },

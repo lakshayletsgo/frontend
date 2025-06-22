@@ -9,9 +9,10 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Home, LogOut,  UserIcon, Building, Calendar } from "lucide-react"
 import { logout, getCurrentUser } from "@/lib/auth"
 import type { AuthUser } from "@/lib/auth"
+import { User } from "@/lib/api"
 
 export function Header() {
-  const [user, setUser] = useState<AuthUser | null>(null)
+  const [user, setUser] = useState<User | null>(null)
   const router = useRouter()
 
   useEffect(() => {

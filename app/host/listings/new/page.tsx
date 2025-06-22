@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Header } from "@/components/header"
 import { Button } from "@/components/ui/button"
@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { createListing } from "@/lib/api"
+import { getCurrentUser, AuthUser } from "@/lib/auth"
 
 interface ListingFormData {
   title: string
@@ -23,7 +24,8 @@ interface ListingFormData {
 }
 
 export default function NewListingPage() {
-  const [formData, setFormData] = useState<ListingFormData>({
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [formData, setFormData] = useState<Omit<ListingFormData, 'user_id'>>({
     title: "",
     description: "",
     location: "",
@@ -37,13 +39,35 @@ export default function NewListingPage() {
   const [error, setError] = useState("")
   const router = useRouter()
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const currentUser = await getCurrentUser();
+        if (currentUser) {
+          setUser(currentUser);
+        } else {
+          router.push('/login'); // Redirect if not logged in
+        }
+      } catch (err) {
+        console.error("Failed to fetch user", err);
+        router.push('/login');
+      }
+    };
+    fetchUser();
+  }, [router]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (!user) {
+      setError("You must be logged in to create a listing.");
+      return;
+    }
+
     setLoading(true)
     setError("")
 
     try {
-      await createListing(formData)
+      await createListing({ ...formData, user_id: user.id })
       router.push("/host/dashboard")
       router.refresh()
     } catch (error) {

@@ -45,6 +45,7 @@ export async function getListing(id: string) {
 }
 
 export interface CreateListingData {
+  user_id: number
   title: string
   description: string
   location: string
